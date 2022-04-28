@@ -15,6 +15,7 @@ class Product(db.Model):
     product_id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     name = db.Column("Name", db.String)
     processes = db.relationship("process", secondary=product_processes, back_populates="products")
+    orders = db.relationship("order", secondary=orders_products, back_populates="products")
 
 
 class Process(db.Model):
@@ -30,6 +31,8 @@ class Order(db.Model):
     order_id = db.Column(db.Integer, primary_key=True, nullable=False)
     customer = db.Column("Name", db.String)
     completed = db.Column("Completed", db.Boolean, default=False)
+    products = db.relationship("product", secondary=orders_products, back_populates="orders")
+    date_to_complete = db.Column("Date to complete", db.Date)
 
 
 class Employee(db.Model):
