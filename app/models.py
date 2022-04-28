@@ -18,12 +18,12 @@ from app import db
 #     orders = db.relationship("order", secondary=orders_products, back_populates="products")
 #
 #
-# class Process(db.Model):
-#     process_id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
-#     name = db.Column("Name", db.String)
-#     comment = db.Column("Comment", db.String)
-#     completed = db.Column("Completed", db.Boolean, default=False)
-#     responsible_employee = db.Column(db.Integer, db.ForeignKey('employee.employee_id'))
+class Process(db.Model):
+    process_id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
+    name = db.Column("Name", db.String)
+    comment = db.Column("Comment", db.String)
+    completed = db.Column("Completed", db.Boolean, default=False)
+    responsible_employee = db.Column(db.Integer, db.ForeignKey('employee.employee_id'))
 #     products = db.relationship("product", secondary=product_processes, back_populates="processes")
 #
 #
@@ -39,6 +39,7 @@ class Employee(db.Model):
     employee_id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     first_name = db.Column("First name", db.String)
     last_name = db.Column("Last name", db.String)
+    user_name = db.Column("Username", db.String, unique=True)
     password = db.Column("Password", db.String)
     admin = db.Column("Administrator", db.Boolean, default=False)
-    # processes = db.relationship('process', backref='employee', lazy='dynamic')
+    processes = db.relationship('Process', backref='employee', lazy='dynamic')
