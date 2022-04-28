@@ -40,4 +40,4 @@ class Employee(db.Model):
     name = db.Column("Name", db.String)
     password = db.Column("Password", db.String)
     admin = db.Column("Administrator", db.Boolean, default=False)
-    processes = db.relationship('process', backref='employee', lazy='dynamic')
+
