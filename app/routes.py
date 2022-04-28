@@ -7,7 +7,7 @@ from app.forms import AddEmployee
 
 @process_app.route('/')
 def test():
-    return render_template('base.html')
+    return render_template('homepage.html')
 
 
 @process_app.route('/login')
@@ -41,6 +41,7 @@ def signup():
 
 
 @process_app.route('/signup', methods=['POST'])
+@login_required
 def signup_post():
     form = AddEmployee()
     if form.validate_on_submit():
