@@ -14,6 +14,7 @@ def signup():
     if form.validate_on_submit():
         new_user = models.Employee(first_name=form.first_name.data,
                                    last_name=form.last_name.data,
+                                   password=form.password,
                                    admin=form.admin.data)
         db.session.add(new_user)
         db.session.commit()
