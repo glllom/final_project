@@ -8,7 +8,13 @@ from app.forms import AddEmployee, AddProduct, AddProcess, AddOrder
 @process_app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('homepage.html')
+    all_processes_to_complete = models.ProcessInOrder.query.filter_by(completed=False)
+    table = [process for process in all_processes_to_complete if
+             process.process in [current_user_process.process_id for current_user_process in current_user.processes]]
+    # orders = models.Order.query.filter_by(completed=False)
+    # for record in table:
+    #     record = [record, 1]
+    return render_template('homepage.html', table=table)
 
 
 # Login / Logout
@@ -23,9 +29,7 @@ def login_post():
     username = request.form.get('username')
     password = request.form.get('password')
     remember = bool(request.form.get('remember'))
-
     user = models.Employee.query.filter_by(user_name=username).first()
-
     if not user or not check_password_hash(user.password, password):
         flash('Please check your login details and try again.')
         return redirect(url_for('login'))  # if the user doesn't exist or password is wrong, reload the page
@@ -92,6 +96,7 @@ def add_product():
         new_product = models.Product(name=form.name.data)
         db.session.add(new_product)
         db.session.commit()
+        return redirect(url_for('add_product'))
     return render_template('add_product.html', form=form, table=table)
 
 
@@ -124,6 +129,7 @@ def add_process():
                                      ])
         db.session.add(new_process)
         db.session.commit()
+        return redirect(url_for('add_process'))
     return render_template('add_process.html', form=form, table=table)
 
 
@@ -139,7 +145,6 @@ def remove_process(process_id):
 @process_app.route('/add_order', methods=['get', 'post'])
 @login_required
 def add_order():
-
     table = models.Order.query.filter_by(completed=False).order_by(models.Order.date_to_complete.asc())
     form = AddOrder()
     form.product.choices = [
@@ -151,14 +156,14 @@ def add_order():
                     for product in form.product.data]
         if order_id in [order.order_id for order in models.Order.query.all()]:
             flash("This order already presents in database.")
-            return render_template('add_order.html', form=form, table=table)
+            return redirect(url_for('add_order'))
         new_order = models.Order(order_id=order_id,
                                  date_to_complete=form.date.data,
                                  customer=form.customer.data,
                                  products=products)
         for process in products[0].processes:
-            new_process_in_order = models.ProcessInOrder(specified_order=order_id,
-                                                         process=process.process_id)
+            new_process_in_order = models.ProcessInOrder(Order=new_order,
+                                                         Process=process)
             db.session.add(new_process_in_order)
         db.session.add(new_order)
         db.session.commit()
@@ -171,5 +176,3 @@ def remove_order(process_id):
     db.session.delete(models.Order.query.get(process_id))
     db.session.commit()
     return redirect(url_for("add_order"))
-
-

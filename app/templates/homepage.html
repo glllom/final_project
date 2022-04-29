@@ -1,10 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-
-    {% if current_user.is_authenticated %}
-    {% if current_user.admin %}
-    {% endif %}
-    {% endif %}
+    <h3 class="text-center">Your current orders:</h3>
+    {% for process in current_user.processes %}
+    <table class="table table-hover">
+        <caption class="caption-top text-primary fw-bold">{{ process.name }}:</caption>
+        <thead>
+        <tr>
+            <th scope="col">Order</th>
+            <th scope="col">Date to complete</th>
+            <th scope="col" style="width:18%;"></th>
+            <th scope="col" style="width:18%;"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for record in table %}
+        <tr>
+            <td>{{ record.specified_order }}</td>
+            <td>{{ orders.order_id }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endfor %}
 </div>
+
 {% endblock %}

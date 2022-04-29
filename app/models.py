@@ -24,6 +24,7 @@ class Process(db.Model):
     name = db.Column("Name", db.String)
     responsible_employee = db.Column(db.Integer, db.ForeignKey('employee.id'))
     products = db.relationship("Product", secondary=product_processes, back_populates="processes")
+    processes_in_order = db.relationship('ProcessInOrder', backref='Process', lazy='dynamic')
 
 
 class Order(db.Model):
@@ -32,6 +33,7 @@ class Order(db.Model):
     completed = db.Column("Completed", db.Boolean, default=False)
     date_to_complete = db.Column("Date_to_complete", db.Date)
     products = db.relationship("Product", secondary=orders_products, back_populates="orders")
+    processes_in_order = db.relationship('ProcessInOrder', backref='Order', lazy='dynamic')
 
 
 class Employee(db.Model, UserMixin):
@@ -45,7 +47,8 @@ class Employee(db.Model, UserMixin):
 
 
 class ProcessInOrder(db.Model):
-    specified_order = db.Column(db.Integer, db.ForeignKey('order.order_id'), primary_key=True)
-    process = db.Column(db.Integer, db.ForeignKey('process.process_id'), primary_key=True)
+    processes_in_order_id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
+    order = db.Column(db.Integer, db.ForeignKey('order.order_id'))
+    process = db.Column(db.Integer, db.ForeignKey('process.process_id'))
     completed = db.Column("Completed", db.Boolean, default=False)
     comment = db.Column("Comment", db.String, default="")

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-    <div class="row g-5 justify-content-md-center">
+    <div class="row g-3 justify-content-md-center">
         <form action="" method="post" class="col-3">
             <h4>Add new Product:</h4>
             {{ form.csrf_token() }}
@@ -20,7 +20,7 @@
         </form>
         <div class="col-8">
             <table class="table table-hover">
-                <caption class="caption-top test-center">All Products</caption>
+                <caption class="caption-top">All Products</caption>
                 <thead>
                 <tr>
                     <th scope="col">Name of Product</th>
@@ -37,11 +37,12 @@
                         {% for process in product.processes %}
 
                         {{ process.name }}
-                        {% endfor %}
                         {% if loop.index < product.processes|length %}
                         <br>
                         <hr>
                         {% endif %}
+                                                {% endfor %}
+
                     </td>
                     <td>
                         <a href="" class="btn btn-warning p-1">Change product</a>

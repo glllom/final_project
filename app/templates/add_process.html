@@ -22,7 +22,7 @@
         </form>
         <div class="col-8">
             <table class="table table-hover">
-                <caption class="caption-top test-center">All Processes</caption>
+                <caption class="caption-top">All Processes</caption>
                 <thead>
                 <tr>
                     <th scope="col">Name of Process</th>
@@ -43,10 +43,11 @@
                         {% for product in process.products %}
 
                         {{ product.name }}
-                        {% endfor %}
+
                         {% if loop.index < process.products|length %}
                         <br><hr>
                         {% endif %}
+                                                {% endfor %}
                     </td>
                     <td>
                         <a href="{{ url_for('remove_process', process_id=process.process_id) }}" class="btn btn-warning p-1">Change
