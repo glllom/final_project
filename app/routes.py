@@ -139,7 +139,8 @@ def remove_process(process_id):
 @process_app.route('/add_order', methods=['get', 'post'])
 @login_required
 def add_order():
-    table = models.Order.query.all()
+
+    table = models.Order.query.filter_by(completed=False).order_by(models.Order.date_to_complete.asc())
     form = AddOrder()
     form.product.choices = [
         (product.product_id, product.name) for product in models.Product.query.all()
@@ -148,6 +149,9 @@ def add_order():
         order_id = form.order_id.data
         products = [models.Product.query.get(product)
                     for product in form.product.data]
+        if order_id in [order.order_id for order in models.Order.query.all()]:
+            flash("This order already presents in database.")
+            return render_template('add_order.html', form=form, table=table)
         new_order = models.Order(order_id=order_id,
                                  date_to_complete=form.date.data,
                                  customer=form.customer.data,
