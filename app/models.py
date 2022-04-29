@@ -22,7 +22,7 @@ class Product(db.Model):
 class Process(db.Model):
     process_id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     name = db.Column("Name", db.String)
-    comment = db.Column("Comment", db.String)
+    # comment = db.Column("Comment", db.String)
     completed = db.Column("Completed", db.Boolean, default=False)
     responsible_employee = db.Column(db.Integer, db.ForeignKey('employee.id'))
     products = db.relationship("Product", secondary=product_processes, back_populates="processes")
@@ -44,3 +44,9 @@ class Employee(db.Model, UserMixin):
     password = db.Column("Password", db.String)
     admin = db.Column("Administrator", db.Boolean, default=False)
     processes = db.relationship('Process', backref='employee', lazy='dynamic')
+
+
+class ProcessInOrder(db.Model):
+    specified_order = db.Column(db.Integer, db.ForeignKey('order.order_id'), primary_key=True)
+    process = db.Column(db.Integer, db.ForeignKey('process.process_id'), primary_key=True)
+    completed = db.Column("Completed", db.Boolean, default=False)
