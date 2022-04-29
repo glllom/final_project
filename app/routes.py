@@ -1,11 +1,12 @@
 from flask import render_template, redirect, url_for, flash, request
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, models, process_app
 from app.forms import AddEmployee, AddProduct, AddProcess, AddOrder
 
 
 @process_app.route('/dashboard')
+@login_required
 def dashboard():
     return render_template('homepage.html')
 
@@ -32,16 +33,24 @@ def login_post():
 
 
 @process_app.route('/signup')
-def signup():
+@login_required
+def add_user():
+    if not current_user.admin:
+        return redirect(url_for('login'))
     form = AddEmployee()
-    return render_template('signup.html', form=form)
+    table = models.Employee.query.all()
+    return render_template('signup.html', form=form, table=table)
 
 
 @process_app.route('/signup', methods=['POST'])
 @login_required
-def signup_post():
+def add_user_post():
     form = AddEmployee()
+    table = models.Employee.query.all()
     if form.validate_on_submit():
+        if form.user_name.data in [user.user_name for user in models.Employee.query.all()]:
+            flash("This username already used.")
+            return redirect(url_for("add_user"))
         new_user = models.Employee(first_name=form.first_name.data,
                                    last_name=form.last_name.data,
                                    user_name=form.user_name.data,
@@ -49,15 +58,22 @@ def signup_post():
                                    admin=form.admin.data)
         db.session.add(new_user)
         db.session.commit()
-        return redirect(url_for("homepage"))
-    return render_template('signup.html', form=form)
+    return redirect(url_for("add_user"))
+
+
+@process_app.route('/remove/<int:user_id>')
+@login_required
+def remove_user(user_id):
+    db.session.delete(models.Employee.query.get(user_id))
+    db.session.commit()
+    return redirect(url_for("add_user"))
 
 
 @process_app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('homepage'))
+    return redirect(url_for('login'))
 
 
 @process_app.route('/add_product', methods=['get', 'post'])
