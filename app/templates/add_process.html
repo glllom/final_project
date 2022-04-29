@@ -1,14 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-    <div class="row g-5 justify-content-md-center">
+    <div class="row g-3 justify-content-md-center">
         <form action="" method="post" class="col-3">
-            <h4>Add new Product:</h4>
+            <h4>Add new Process:</h4>
             {{ form.csrf_token() }}
             {{ form.name.label(class="form-label m-1") }}
             {{ form.name(class="form-control m-1") }}
-            {{ form.processes.label(class="form-label m-1") }}
-            {{ form.processes(class="form-select m-1", size=4, multiple=True) }}
+            {{ form.employee.label(class="form-label m-1") }}
+            {{ form.employee(class="form-select m-1") }}
+            {{ form.products.label(class="form-label m-1") }}
+            {{ form.products(class="form-select m-1", size=4, multiple=True) }}
             {{ form.submit(class="btn btn-primary m-1", value="Add") }}
             {% with messages = get_flashed_messages() %}
             {% if messages %}
@@ -25,19 +27,34 @@
                 <tr>
                     <th scope="col">Name of Process</th>
                     <th scope="col">Employee in charge of this process</th>
-                    <th scope="col" style="width:15%;"></th>
+                    <th scope="col">Products requiring this process</th>
+                    <th scope="col" style="width:18%;"></th>
+                    <th scope="col" style="width:18%;"></th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for user in table %}
+                {% for process in table %}
                 <tr>
-                    <td>{{ user.first_name }} {{ user.last_name }}</td>
+                    <td>{{ process.name }}</td>
                     <td>
-                        {% if user.admin %} Yes {% else %} No {% endif %}
+                        {{ process.employee.first_name }} {{ process.employee.last_name }}
                     </td>
                     <td>
-                        <a href="{{ url_for('remove_user', user_id=user.id) }}" class="btn btn-danger p-1">Delete
-                            user</a>
+                        {% for product in process.products %}
+
+                        {{ product.name }}
+                        {% endfor %}
+                        {% if loop.index < process.products|length %}
+                        <br><hr>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('remove_process', process_id=process.process_id) }}" class="btn btn-warning p-1">Change
+                            process</a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('remove_process', process_id=process.process_id) }}" class="btn btn-danger p-1">Delete
+                            process</a>
                     </td>
 
                 </tr>

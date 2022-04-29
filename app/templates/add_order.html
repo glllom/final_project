@@ -1,36 +1,48 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-        {% if current_user.is_authenticated %}
-        <h2>Add new Order</h2>
+    <div class="row g-3 justify-content-md-center">
+        {% if current_user.admin %}
+        <form action="" method="post" class="d-flex flex-column w-25  fs-5">
+            {{ form.order_id.label(class="form-label m-1") }}
+            {{ form.order_id(class="form-control m-1") }}
+            {{ form.customer.label(class="form-label m-1") }}
+            {{ form.customer(class="form-control m-1") }}
+            {{ form.product.label(class="form-label m-1") }}
+            {{ form.product(class="form-control m-1") }}
+            {{ form.date.label(class="form-label m-1") }}
+            {{ form.date(class="form-control m-1") }}
+            {{ form.submit(class="btn btn-primary m-3 w-50", value="Add new Order") }}
+        </form>
         {% endif %}
-        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-            <li><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
-            <li><a href="#" class="nav-link px-2 link-dark">Features</a></li>
-            <li><a href="#" class="nav-link px-2 link-dark">Pricing</a></li>
-            <li><a href="#" class="nav-link px-2 link-dark">FAQs</a></li>
-            <li><a href="#" class="nav-link px-2 link-dark">About</a></li>
-        </ul>
-
-        <div class="col-md-3 text-end">
-            {% if current_user.is_authenticated %}
-            <a href="{{ url_for('logout') }}" class="btn btn-primary">Logout</a>
-            {% else %}
-            <a href="{{ url_for('login') }}" class="btn btn-outline-primary me-2">Login</a>
-            {% endif %}
+        <div class="col-8">
+            <table class="table table-hover">
+                <caption class="caption-top test-center">All active Orders</caption>
+                <thead>
+                <tr>
+                    <th scope="col">Number of Order</th>
+                    <th scope="col">Customer</th>
+                    <th scope="col">Date to complete</th>
+                    <th scope="col" style="width:18%;"></th>
+                    <th scope="col" style="width:18%;"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for order in table %}
+                <tr>
+                    <td class="fw-bold">{{ order.order_id }}</td>
+                    <td>{{ order.customer }}</td>
+                    <td>{{ order.date_to_complete.strftime('%d/%m/%Y') }}</td>
+                    <td>
+                        <a href="{{ url_for('remove_order', order_id=order.order_id) }}" class="btn btn-danger p-1">Delete
+                            Order</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
-    </header>
-    {% if current_user.admin %}
-    <form action="" method="post" class="d-flex flex-column w-25 m-5 p-3 fs-5">
-        <p>{{ form.order_id.label }}</p>
-        <p>{{ form.order_id }}</p>
-        <p>{{ form.product.label }}</p>
-        <p>{{ form.product }}</p>
-        <p>{{ form.date.label }}</p>
-        <p>{{ form.date }}</p>
-        {{ form.submit(class="btn btn-primary m-3 w-50") }}
-    </form>
-    {% endif %}
+    </div>
+
 </div>
 {% endblock %}

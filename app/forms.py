@@ -29,6 +29,7 @@ class AddProcess(FlaskForm):
 
 class AddOrder(FlaskForm):
     order_id = IntegerField("Order Number", validators=[InputRequired()])
+    customer = StringField("Customer", validators=[InputRequired()])
     date = DateField("Deadline", validators=[InputRequired()])
     product = SelectField("Type of product", validators=[InputRequired()])
     submit = SubmitField()

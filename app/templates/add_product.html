@@ -34,13 +34,21 @@
                 <tr>
                     <td>{{ product.name }}</td>
                     <td>
+                        {% for process in product.processes %}
 
+                        {{ process.name }}
+                        {% endfor %}
+                        {% if loop.index < product.processes|length %}
+                        <br>
+                        <hr>
+                        {% endif %}
                     </td>
                     <td>
                         <a href="" class="btn btn-warning p-1">Change product</a>
                     </td>
                     <td>
-                        <a href="" class="btn btn-danger p-1">Delete
+                        <a href="{{ url_for('remove_product', product_id=product.product_id) }}"
+                           class="btn btn-danger p-1">Delete
                             product</a>
                     </td>
 

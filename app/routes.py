@@ -41,7 +41,7 @@ def logout():
 
 
 # Add user/ Remove user
-@process_app.route('/signup')
+@process_app.route('/add_user')
 @login_required
 def add_user():
     if not current_user.admin:
@@ -69,7 +69,7 @@ def add_user_post():
     return redirect(url_for("add_user"))
 
 
-@process_app.route('/remove/<int:user_id>')
+@process_app.route('/remove_user/<int:user_id>')
 @login_required
 def remove_user(user_id):
     db.session.delete(models.Employee.query.get(user_id))
@@ -95,11 +95,19 @@ def add_product():
     return render_template('add_product.html', form=form, table=table)
 
 
+@process_app.route('/remove_product/<int:product_id>')
+@login_required
+def remove_product(product_id):
+    db.session.delete(models.Product.query.get(product_id))
+    db.session.commit()
+    return redirect(url_for("add_product"))
 
 
+# Processes operations
 @process_app.route('/add_process', methods=['get', 'post'])
 @login_required
 def add_process():
+    table = models.Process.query.all()
     form = AddProcess()
     form.employee.choices = [
         (employee.id, f"{employee.first_name} {employee.last_name}") for employee in models.Employee.query.all()
@@ -116,12 +124,22 @@ def add_process():
                                      ])
         db.session.add(new_process)
         db.session.commit()
-    return render_template('add_process.html', form=form)
+    return render_template('add_process.html', form=form, table=table)
 
 
+@process_app.route('/remove_process/<int:process_id>')
+@login_required
+def remove_process(process_id):
+    db.session.delete(models.Process.query.get(process_id))
+    db.session.commit()
+    return redirect(url_for("add_process"))
+
+
+# Orders operations
 @process_app.route('/add_order', methods=['get', 'post'])
 @login_required
 def add_order():
+    table = models.Order.query.all()
     form = AddOrder()
     form.product.choices = [
         (product.product_id, product.name) for product in models.Product.query.all()
@@ -130,13 +148,24 @@ def add_order():
         order_id = form.order_id.data
         products = [models.Product.query.get(product)
                     for product in form.product.data]
-        for process in products[0].processes:
-            new_process_in_order = models.ProcessInOrder(specified_order=order_id,
-                                                         process=process)
-            db.session.add(new_process_in_order)
         new_order = models.Order(order_id=order_id,
                                  date_to_complete=form.date.data,
+                                 customer=form.customer.data,
                                  products=products)
+        for process in products[0].processes:
+            new_process_in_order = models.ProcessInOrder(specified_order=order_id,
+                                                         process=process.process_id)
+            db.session.add(new_process_in_order)
         db.session.add(new_order)
         db.session.commit()
-    return render_template('add_order.html', form=form)
+    return render_template('add_order.html', form=form, table=table)
+
+
+@process_app.route('/remove_order/<int:order_id>')
+@login_required
+def remove_order(process_id):
+    db.session.delete(models.Order.query.get(process_id))
+    db.session.commit()
+    return redirect(url_for("add_order"))
+
+

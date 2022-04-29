@@ -7,10 +7,10 @@
     {% if current_user.is_authenticated and current_user.admin %}
     <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
         <li><a href="{{ url_for('dashboard') }}" class="px-1 mx-1 btn btn-outline-primary">Dashboard</a></li>
+        <li><a href="{{ url_for('add_order') }}" class="px-1 ms-1 me-5 btn btn-primary">Add new Order</a></li>
         <li><a href="{{ url_for('add_user') }}" class="px-1 mx-1 btn btn-primary">Employees</a></li>
         <li><a href="{{ url_for('add_product') }}" class="px-1 mx-1 btn btn-primary">Products</a></li>
-        <li><a href="#" class="nav-link px-2 link-dark">FAQs</a></li>
-        <li><a href="#" class="nav-link px-2 link-dark">About</a></li>
+        <li><a href="{{ url_for('add_process') }}" class="px-1 mx-1 btn btn-primary">Processes</a></li>
     </ul>
     {% endif %}
     <div class="col-md-3 text-end">

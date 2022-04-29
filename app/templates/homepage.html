@@ -4,9 +4,6 @@
 
     {% if current_user.is_authenticated %}
     {% if current_user.admin %}
-    <a href="{{ url_for('add_product') }}" class="btn btn-primary">Add new Product</a>
-    <a href="{{ url_for('add_process') }}" class="btn btn-primary">Add new Process</a>
-    <a href="{{ url_for('add_order') }}" class="btn btn-primary">Add new Order</a>
     {% endif %}
     {% endif %}
 </div>

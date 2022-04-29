@@ -40,7 +40,9 @@
                         {% if user.admin %} Yes {% else %} No {% endif %}
                     </td>
                     <td>
+                        {% if user.id > 1 %}
                         <a href="{{ url_for('remove_user', user_id=user.id) }}" class="btn btn-danger p-1">Delete user</a>
+                        {% endif %}
                     </td>
 
                 </tr>
