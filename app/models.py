@@ -22,7 +22,6 @@ class Product(db.Model):
 class Process(db.Model):
     process_id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     name = db.Column("Name", db.String)
-    # comment = db.Column("Comment", db.String)
     completed = db.Column("Completed", db.Boolean, default=False)
     responsible_employee = db.Column(db.Integer, db.ForeignKey('employee.id'))
     products = db.relationship("Product", secondary=product_processes, back_populates="processes")
@@ -50,3 +49,4 @@ class ProcessInOrder(db.Model):
     specified_order = db.Column(db.Integer, db.ForeignKey('order.order_id'), primary_key=True)
     process = db.Column(db.Integer, db.ForeignKey('process.process_id'), primary_key=True)
     completed = db.Column("Completed", db.Boolean, default=False)
+    comment = db.Column("Comment", db.String)

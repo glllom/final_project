@@ -5,12 +5,13 @@ from app import db, models, process_app
 from app.forms import AddEmployee, AddProduct, AddProcess, AddOrder
 
 
-@process_app.route('/')
+@process_app.route('/dashboard')
 def test():
     return render_template('homepage.html')
 
 
 @process_app.route('/login')
+@process_app.route('/')
 def login():
     return render_template('login.html')
 
@@ -107,10 +108,16 @@ def add_order():
         (product.product_id, product.name) for product in models.Product.query.all()
     ]
     if form.is_submitted():
-        new_process = models.Process(order_id=form.order_id.data,
-                                     date_to_complete=form.date.data,
-                                     product=[models.Product.query.get(product)
-                                              for product in form.product.data])
-        db.session.add(new_process)
+        order_id = form.order_id.data
+        products = [models.Product.query.get(product)
+                    for product in form.product.data]
+        for process in products[0].processes:
+            new_process_in_order = models.ProcessInOrder(specified_order=order_id,
+                                                         process=process)
+            db.session.add(new_process_in_order)
+        new_order = models.Order(order_id=order_id,
+                                 date_to_complete=form.date.data,
+                                 products=products)
+        db.session.add(new_order)
         db.session.commit()
     return render_template('add_order.html', form=form)

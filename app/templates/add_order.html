@@ -3,7 +3,7 @@
 <div class="container">
     <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
         {% if current_user.is_authenticated %}
-        <h2>Add new Product</h2>
+        <h2>Add new Order</h2>
         {% endif %}
         <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
             <li><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
@@ -22,13 +22,15 @@
         </div>
     </header>
     {% if current_user.admin %}
-     <form action="" method="post" class="d-flex flex-column w-25 m-5 p-3 fs-5">
-        <p>{{ form.name.label }}</p>
-    <p>{{ form.name }}</p>
-    <p>{{ form.processes.label }}</p>
-    <p>{{ form.processes }}</p>
-              {{ form.submit(class="btn btn-primary m-3 w-50") }}
-     </form>
+    <form action="" method="post" class="d-flex flex-column w-25 m-5 p-3 fs-5">
+        <p>{{ form.order_id.label }}</p>
+        <p>{{ form.order_id }}</p>
+        <p>{{ form.product.label }}</p>
+        <p>{{ form.product }}</p>
+        <p>{{ form.date.label }}</p>
+        <p>{{ form.date }}</p>
+        {{ form.submit(class="btn btn-primary m-3 w-50") }}
+    </form>
     {% endif %}
 </div>
 {% endblock %}
