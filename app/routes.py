@@ -6,12 +6,12 @@ from app.forms import AddEmployee, AddProduct, AddProcess, AddOrder
 
 
 @process_app.route('/dashboard')
-def test():
+def dashboard():
     return render_template('homepage.html')
 
 
-@process_app.route('/login')
 @process_app.route('/')
+@process_app.route('/login')
 def login():
     return render_template('login.html')
 
@@ -27,12 +27,8 @@ def login_post():
     if not user or not check_password_hash(user.password, password):
         flash('Please check your login details and try again.')
         return redirect(url_for('login'))  # if the user doesn't exist or password is wrong, reload the page
-
-    # if the above check passes, then we know the user has the right credentials
     login_user(user, remember=remember)
-
-    # if the above check passes, then we know the user has the right credentials
-    return redirect(url_for('test'))
+    return redirect(url_for('dashboard'))
 
 
 @process_app.route('/signup')
@@ -53,7 +49,7 @@ def signup_post():
                                    admin=form.admin.data)
         db.session.add(new_user)
         db.session.commit()
-        return redirect(url_for("test"))
+        return redirect(url_for("homepage"))
     return render_template('signup.html', form=form)
 
 
@@ -61,7 +57,7 @@ def signup_post():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('test'))
+    return redirect(url_for('homepage'))
 
 
 @process_app.route('/add_product', methods=['get', 'post'])
