@@ -11,6 +11,7 @@ def dashboard():
     return render_template('homepage.html')
 
 
+# Login / Logout
 @process_app.route('/')
 @process_app.route('/login')
 def login():
@@ -32,6 +33,14 @@ def login_post():
     return redirect(url_for('dashboard'))
 
 
+@process_app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+
+# Add user/ Remove user
 @process_app.route('/signup')
 @login_required
 def add_user():
@@ -39,14 +48,13 @@ def add_user():
         return redirect(url_for('login'))
     form = AddEmployee()
     table = models.Employee.query.all()
-    return render_template('signup.html', form=form, table=table)
+    return render_template('add_user.html', form=form, table=table)
 
 
-@process_app.route('/signup', methods=['POST'])
+@process_app.route('/add_user', methods=['POST'])
 @login_required
 def add_user_post():
     form = AddEmployee()
-    table = models.Employee.query.all()
     if form.validate_on_submit():
         if form.user_name.data in [user.user_name for user in models.Employee.query.all()]:
             flash("This username already used.")
@@ -69,16 +77,13 @@ def remove_user(user_id):
     return redirect(url_for("add_user"))
 
 
-@process_app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('login'))
-
-
+# Product operations
 @process_app.route('/add_product', methods=['get', 'post'])
 @login_required
 def add_product():
+    if not current_user.admin:
+        return redirect(url_for('dashboard'))
+    table = models.Product.query.all()
     form = AddProduct()
     form.processes.choices = [
         (process.process_id, process.name) for process in models.Process.query.all()
@@ -87,7 +92,9 @@ def add_product():
         new_product = models.Product(name=form.name.data)
         db.session.add(new_product)
         db.session.commit()
-    return render_template('add_product.html', form=form)
+    return render_template('add_product.html', form=form, table=table)
+
+
 
 
 @process_app.route('/add_process', methods=['get', 'post'])

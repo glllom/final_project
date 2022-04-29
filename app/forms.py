@@ -22,7 +22,7 @@ class AddProduct(FlaskForm):
 
 class AddProcess(FlaskForm):
     name = StringField("Name of process", validators=[InputRequired()])
-    employee = SelectField("Employee responsible of this process")
+    employee = SelectField("Employee in charge of this process")
     products = SelectMultipleField("Products")
     submit = SubmitField()
 

@@ -20,24 +20,28 @@
         </form>
         <div class="col-8">
             <table class="table table-hover">
-                <caption class="caption-top test-center">All Processes</caption>
+                <caption class="caption-top test-center">All Products</caption>
                 <thead>
                 <tr>
-                    <th scope="col">Name of Process</th>
-                    <th scope="col">Employee in charge of this process</th>
-                    <th scope="col" style="width:15%;"></th>
+                    <th scope="col">Name of Product</th>
+                    <th scope="col">Processes for making this product</th>
+                    <th scope="col" style="width:18%;"></th>
+                    <th scope="col" style="width:18%;"></th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for user in table %}
+                {% for product in table %}
                 <tr>
-                    <td>{{ user.first_name }} {{ user.last_name }}</td>
+                    <td>{{ product.name }}</td>
                     <td>
-                        {% if user.admin %} Yes {% else %} No {% endif %}
+
                     </td>
                     <td>
-                        <a href="{{ url_for('remove_user', user_id=user.id) }}" class="btn btn-danger p-1">Delete
-                            user</a>
+                        <a href="" class="btn btn-warning p-1">Change product</a>
+                    </td>
+                    <td>
+                        <a href="" class="btn btn-danger p-1">Delete
+                            product</a>
                     </td>
 
                 </tr>
