@@ -8,12 +8,8 @@ from app.forms import AddEmployee, AddProduct, AddProcess, AddOrder
 @process_app.route('/dashboard')
 @login_required
 def dashboard():
-    all_processes_to_complete = models.ProcessInOrder.query.filter_by(completed=False)
-    table = [process for process in all_processes_to_complete if
-             process.process in [current_user_process.process_id for current_user_process in current_user.processes]]
-    # orders = models.Order.query.filter_by(completed=False)
-    # for record in table:
-    #     record = [record, 1]
+    table = [process for process in models.ProcessInOrder.query.filter_by(completed=False) if
+             process.Process.responsible_employee == current_user.id]
     return render_template('homepage.html', table=table)
 
 
@@ -93,7 +89,11 @@ def add_product():
         (process.process_id, process.name) for process in models.Process.query.all()
     ]
     if form.is_submitted():
-        new_product = models.Product(name=form.name.data)
+        new_product = models.Product(name=form.name.data,
+                                     processes=[
+                                         models.Process.query.get(product)
+                                         for product in form.processes.data
+                                     ])
         db.session.add(new_product)
         db.session.commit()
         return redirect(url_for('add_product'))
@@ -172,7 +172,7 @@ def add_order():
 
 @process_app.route('/remove_order/<int:order_id>')
 @login_required
-def remove_order(process_id):
-    db.session.delete(models.Order.query.get(process_id))
+def remove_order(order_id):
+    db.session.delete(models.Order.query.get(order_id))
     db.session.commit()
     return redirect(url_for("add_order"))

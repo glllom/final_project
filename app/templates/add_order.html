@@ -41,7 +41,7 @@
                     <td>{{ order.customer }}</td>
                     <td>{{ order.date_to_complete.strftime('%d/%m/%Y') }}</td>
                     <td>
-                        <a href="{{ url_for('remove_order', order_id=order.order_id) }}" class="btn btn-warning p-1">Change
+                        <a href="{{ url_for('remove_order', order_id=order.order_id) }}" class="btn btn-success p-1">View
                             Order</a>
                     </td>
                     <td>
