@@ -10,6 +10,8 @@
             {{ form.customer(class="form-control m-1") }}
             {{ form.product.label(class="form-label m-1") }}
             {{ form.product(class="form-control m-1") }}
+            {{ form.quantity.label(class="form-label m-1") }}
+            {{ form.quantity(class="form-control m-1") }}
             {{ form.date.label(class="form-label m-1") }}
             {{ form.date(class="form-control m-1") }}
             {{ form.submit(class="btn btn-primary m-3 w-50", value="Add new Order") }}
@@ -23,6 +25,10 @@
         </form>
         {% endif %}
         <div class="col-8">
+              <form class="d-flex justify-content-end">
+        <input class="form-control me-2 w-25" type="search" placeholder="Search" aria-label="Search Order">
+        <button class="btn btn-outline-success" type="submit">Search Order</button>
+      </form>
         <p class="text-secondary  border-bottom border-dark border-2 lh-lg pb-1 mb-1">All active Orders</p>
         <div class=container>
             <div class="row border-bottom border-dark border-2">
@@ -45,6 +51,7 @@
                     <div id=o{{order.order_id}} class="collapse">
                         <p class="fw-bold">Customer: <span class="fw-normal"> {{ order.customer }}</span></p>
                         <p class="fw-bold">Product: <span class="fw-normal"> {{ order.products[0].name }}</span></p>
+                        <p class="fw-bold">Quantity: <span class="fw-normal"> {{ order.quantity }}</span></p>
                     </div>
                 </div>
                 {% endfor %}

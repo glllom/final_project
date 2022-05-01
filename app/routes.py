@@ -10,7 +10,22 @@ from app.forms import AddEmployee, AddProduct, AddProcess, AddOrder
 def dashboard():
     table = [process for process in models.ProcessInOrder.query.filter_by(completed=False) if
              process.Process.responsible_employee == current_user.id]
+    # lasts = list(models.ProcessInOrder.query.filter_by(completed=False, order=1))
+    # print(lasts)
     return render_template('homepage.html', table=table)
+
+
+@process_app.route('/complete_process/<int:process_id>', methods=['get', 'post'])
+@login_required
+def complete_process(process_id):
+    order = models.ProcessInOrder.query.get(process_id).Order
+    print(order)
+    models.ProcessInOrder.query.get(process_id).completed = True
+    if not list(models.ProcessInOrder.query.filter_by(completed=False, order=order.order_id)):
+        print("sdfsdf")
+        order.completed = True
+    db.session.commit()
+    return redirect(url_for('dashboard'))
 
 
 # Login / Logout
@@ -205,6 +220,7 @@ def add_order():
         new_order = models.Order(order_id=order_id,
                                  date_to_complete=form.date.data,
                                  customer=form.customer.data,
+                                 quantity=form.quantity.data,
                                  products=products)
         for process in products[0].processes:
             new_process_in_order = models.ProcessInOrder(Order=new_order,

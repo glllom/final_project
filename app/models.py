@@ -30,6 +30,7 @@ class Process(db.Model):
 class Order(db.Model):
     order_id = db.Column(db.Integer, primary_key=True, nullable=False)
     customer = db.Column("Name", db.String)
+    quantity = db.Column("Quantity", db.Integer)
     completed = db.Column("Completed", db.Boolean, default=False)
     date_to_complete = db.Column("Date_to_complete", db.Date)
     products = db.relationship("Product", secondary=orders_products, back_populates="orders")

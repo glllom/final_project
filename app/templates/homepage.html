@@ -9,17 +9,16 @@
         <tr>
             <th scope="col">Order</th>
             <th scope="col">Date to complete</th>
-            {#<th scope="col">Comments</th>#}
             <th scope="col" style="width:18%;"></th>
         </tr>
         </thead>
         <tbody>
-        {% for record in table %}
+        {% for record in table if process == record.Process %}
         <tr>
             <td>{{ record.Order.order_id }}</td>
             <td>{{ record.Order.date_to_complete.strftime('%d/%m/%Y') }}</td>
             {#<td class="form-control fw-italic">{{ record.comments }}</td>#}
-            <td><a href="" class="btn btn-success p-1">Mark as Complete</a></td>
+            <td><a href="{{ url_for('complete_process', process_id=record.processes_in_order_id) }}" class="btn btn-success p-1">Mark as Complete</a></td>
         </tr>
         {% endfor %}
         </tbody>
