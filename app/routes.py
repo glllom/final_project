@@ -10,8 +10,6 @@ from app.forms import AddEmployee, AddProduct, AddProcess, AddOrder
 def dashboard():
     table = [process for process in models.ProcessInOrder.query.filter_by(completed=False) if
              process.Process.responsible_employee == current_user.id]
-    # lasts = list(models.ProcessInOrder.query.filter_by(completed=False, order=1))
-    # print(lasts)
     return render_template('homepage.html', table=table)
 
 
@@ -237,3 +235,16 @@ def remove_order(order_id):
     db.session.delete(models.Order.query.get(order_id))
     db.session.commit()
     return redirect(url_for("add_order"))
+
+
+@process_app.route('/search_order', methods=['post'])
+@login_required
+def search_order():
+    order = models.Order.query.get(request.form.get("search_field"))
+    if not order:
+        flash("Incorrect number.")
+        return redirect(url_for("add_order"))
+    print(order)
+    order = []
+
+    return render_template('show_order.html', order=order)

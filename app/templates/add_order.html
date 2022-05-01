@@ -15,38 +15,44 @@
             {{ form.date.label(class="form-label m-1") }}
             {{ form.date(class="form-control m-1") }}
             {{ form.submit(class="btn btn-primary m-3 w-50", value="Add new Order") }}
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            <p class="text-danger">{{ messages[0] }}</p>
-            {% else %}
-            <p style="visibility:hidden;">message</p>
-            {% endif %}
-            {% endwith %}
         </form>
         {% endif %}
         <div class="col-8">
-              <form class="d-flex justify-content-end">
-        <input class="form-control me-2 w-25" type="search" placeholder="Search" aria-label="Search Order">
-        <button class="btn btn-outline-success" type="submit">Search Order</button>
-      </form>
-        <p class="text-secondary  border-bottom border-dark border-2 lh-lg pb-1 mb-1">All active Orders</p>
-        <div class=container>
-            <div class="row border-bottom border-dark border-2">
-                <div class="col-4 pb-1 fw-bold lh-lg mx-1">Number of Order</div>
-                <div class="col-4 pb-1 fw-bold lh-lg mx-1">Date to complete</div>
-                <div class="w-25"></div>
-                <div class="w-25"></div>
-            </div>
+
+            <form class="d-flex justify-content-end" action="{{ url_for('search_order') }}" method="post">
+                <div class="col">
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <h4 class="text-danger">{{ messages[0] }}</h4>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+                <input class="form-control me-2 w-25" type="search" placeholder="Search" aria-label="Search Order"
+                       name="search_field">
+                <button class="btn btn-outline-success" type="submit">Search Order</button>
+
+            </form>
+            <p class="text-secondary  border-bottom border-dark border-2 lh-lg pb-1 mb-1">All active Orders</p>
+            <div class=container>
+                <div class="row border-bottom border-dark border-2">
+                    <div class="col-4 pb-1 fw-bold lh-lg mx-1">Number of Order</div>
+                    <div class="col-4 pb-1 fw-bold lh-lg mx-1">Date to complete</div>
+                    <div class="w-25"></div>
+                    <div class="w-25"></div>
+                </div>
                 {% for order in table %}
                 <div class="row table-row border-bottom border-black-50 border-1">
                     <div class="col-4 pb-1 fw-bold lh-lg m-1">{{ order.order_id }}</div>
                     <div class="col-3 pb-1 fw-normal lh-lg m-1">{{ order.date_to_complete.strftime('%d/%m/%Y') }}</div>
                     <div class="col-2 pb-1 fw-normal lh-lg m-1">
-                        <button type="button" data-bs-toggle="collapse" class="btn btn-success p-1" data-bs-target="#o{{order.order_id}}"
-                            aria-expanded="true" aria-controls="o{{order.order_id}}">View More...</button>
+                        <button type="button" data-bs-toggle="collapse" class="btn btn-success p-1"
+                                data-bs-target="#o{{order.order_id}}"
+                                aria-expanded="true" aria-controls="o{{order.order_id}}">View More...
+                        </button>
                     </div>
                     <div class="col-2 pb-1 fw-bold lh-lg m-1">
-                        <a href="{{ url_for('remove_order', order_id=order.order_id) }}" class="btn btn-danger p-1">Delete Order</a>
+                        <a href="{{ url_for('remove_order', order_id=order.order_id) }}" class="btn btn-danger p-1">Delete
+                            Order</a>
                     </div>
                     <div id=o{{order.order_id}} class="collapse">
                         <p class="fw-bold">Customer: <span class="fw-normal"> {{ order.customer }}</span></p>
@@ -56,9 +62,9 @@
                 </div>
                 {% endfor %}
 
+            </div>
         </div>
     </div>
-</div>
 
 </div>
 {% endblock %}
