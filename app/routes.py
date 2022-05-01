@@ -100,6 +100,30 @@ def add_product():
     return render_template('add_product.html', form=form, table=table)
 
 
+@process_app.route('/change_product', methods=['post'])
+@login_required
+def change_product():
+    print("stage1")
+    if not current_user.admin:
+        return redirect(url_for('dashboard'))
+    table = models.Product.query.all()
+    form = AddProduct()
+    form.processes.choices = [
+        (process.process_id, process.name) for process in models.Process.query.all()
+    ]
+    if form.is_submitted():
+        # new_product = models.Product(name=form.name.data,
+        #                              processes=[
+        #                                  models.Process.query.get(product)
+        #                                  for product in form.processes.data
+        #                              ])
+        # db.session.add(new_product)
+        # db.session.commit()
+
+        return redirect(url_for('add_product'))
+    return render_template('add_product.html', form=form, table=table)
+
+
 @process_app.route('/remove_product/<int:product_id>')
 @login_required
 def remove_product(product_id):
