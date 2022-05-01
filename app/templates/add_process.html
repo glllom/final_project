@@ -50,8 +50,12 @@
                                                 {% endfor %}
                     </td>
                     <td>
-                        <a href="{{ url_for('remove_process', process_id=process.process_id) }}" class="btn btn-warning p-1">Change
-                            process</a>
+                        <button type="button" onclick="change_process('{{process.process_id}}','{{process.name}}','{{process.employee.id}}',[{% for product in process.products %}
+                                                                                       {{ product.product_id }},
+                                                                                       {% endfor %}])"
+                                class="btn btn-warning p-1" data-bs-toggle="modal" data-bs-target="#form_div">Change
+                            product
+                        </button>
                     </td>
                     <td>
                         <a href="{{ url_for('remove_process', process_id=process.process_id) }}" class="btn btn-danger p-1">Delete
@@ -64,5 +68,28 @@
             </table>
         </div>
     </div>
+</div>
+<div class="modal fade" id="form_div" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content container p-2">
+
+    <form action="/change_process" method="post" class="" id="change_form">
+        <h4>Change Process:</h4>
+            {{ form.csrf_token() }}
+            {{ form.name.label(class="form-label m-1") }}
+            {{ form.name(class="form-control m-1", id="change_form_name") }}
+            {{ form.employee.label(class="form-label m-1") }}
+            {{ form.employee(class="form-select m-1", id="change_form_employee") }}
+            {{ form.products.label(class="form-label m-1") }}
+            {{ form.products(class="form-select m-1", size=4, multiple=True, id="change_form_products") }}
+        <footer>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        {{ form.submit(class="btn btn-primary m-1", value="Save changes") }}
+        </footer>
+
+    </form>
+        </div>
+        </div>
 </div>
 {% endblock %}

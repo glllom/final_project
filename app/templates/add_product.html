@@ -40,13 +40,15 @@
                         <br>
                         <hr width="40%">
                         {% endif %}
-                                                {% endfor %}
+                        {% endfor %}
                     </td>
                     <td>
-                        <button type="button" onclick="load_params('{{product.name}}',[{% for process in product.processes %}
+                        <button type="button" onclick="change_product('{{product.product_id}}','{{product.name}}',[{% for process in product.processes %}
                                                                                        {{ process.process_id }},
                                                                                        {% endfor %}])"
-                                class="btn btn-warning p-1">Change product</button>
+                                class="btn btn-warning p-1" data-bs-toggle="modal" data-bs-target="#form_div">Change
+                            product
+                        </button>
                     </td>
                     <td>
                         <a href="{{ url_for('remove_product', product_id=product.product_id) }}"
@@ -61,15 +63,25 @@
         </div>
     </div>
 </div>
-<div class="modafdgl">
-            <form action="/change_product" method="post" class="col-3">
-            <h4>Change Product:</h4>
-            {{ form.csrf_token() }}
-            {{ form.name.label(class="form-label m-1") }}
-            {{ form.name(class="form-control m-1", id="change_form_name") }}
-            {{ form.processes.label(class="form-label m-1") }}
-            {{ form.processes(class="form-select m-1", size=4, multiple=True, id="change_form_processes") }}
-            {{ form.submit(class="btn btn-primary m-1", value="Save changes") }}
-        </form>
+<div class="modal fade" id="form_div" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content container p-2">
+
+    <form action="/change_product" method="post" class="" id="change_form">
+        <h4>Change Product:</h4>
+        {{ form.csrf_token() }}
+        {{ form.name.label(class="form-label m-1") }}
+        {{ form.name(class="form-control m-1", id="change_form_name") }}
+        {{ form.processes.label(class="form-label m-1") }}
+        {{ form.processes(class="form-select m-1", size=4, multiple=True, id="change_form_processes") }}
+        <footer>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        {{ form.submit(class="btn btn-primary m-1", value="Save changes") }}
+        </footer>
+
+    </form>
+        </div>
+        </div>
 </div>
 {% endblock %}

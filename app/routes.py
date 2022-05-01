@@ -100,10 +100,9 @@ def add_product():
     return render_template('add_product.html', form=form, table=table)
 
 
-@process_app.route('/change_product', methods=['post'])
+@process_app.route('/change_product/<int:product_id>', methods=['post'])
 @login_required
-def change_product():
-    print("stage1")
+def change_product(product_id):
     if not current_user.admin:
         return redirect(url_for('dashboard'))
     table = models.Product.query.all()
@@ -112,14 +111,10 @@ def change_product():
         (process.process_id, process.name) for process in models.Process.query.all()
     ]
     if form.is_submitted():
-        # new_product = models.Product(name=form.name.data,
-        #                              processes=[
-        #                                  models.Process.query.get(product)
-        #                                  for product in form.processes.data
-        #                              ])
-        # db.session.add(new_product)
-        # db.session.commit()
-
+        product_to_change = models.Product.query.get(product_id)
+        product_to_change.name = form.name.data
+        product_to_change.processes = [models.Process.query.get(product) for product in form.processes.data]
+        db.session.commit()
         return redirect(url_for('add_product'))
     return render_template('add_product.html', form=form, table=table)
 
@@ -136,6 +131,8 @@ def remove_product(product_id):
 @process_app.route('/add_process', methods=['get', 'post'])
 @login_required
 def add_process():
+    if not current_user.admin:
+        return redirect(url_for('dashboard'))
     table = models.Process.query.all()
     form = AddProcess()
     form.employee.choices = [
@@ -152,6 +149,30 @@ def add_process():
                                          for product in form.products.data
                                      ])
         db.session.add(new_process)
+        db.session.commit()
+        return redirect(url_for('add_process'))
+    return render_template('add_process.html', form=form, table=table)
+
+
+@process_app.route('/change_process/<int:process_id>', methods=['post'])
+@login_required
+def change_process(process_id):
+    if not current_user.admin:
+        return redirect(url_for('dashboard'))
+    table = models.Process.query.all()
+    form = AddProcess()
+    form.employee.choices = [
+        (employee.id, f"{employee.first_name} {employee.last_name}") for employee in models.Employee.query.all()
+    ]
+    form.products.choices = [
+        (product.product_id, product.name) for product in models.Product.query.all()
+    ]
+    if form.is_submitted():
+        process_to_change = models.Process.query.get(process_id)
+        process_to_change.name = form.name.data
+        process_to_change.employee = models.Employee.query.get(form.employee.data)
+        process_to_change.products = [models.Product.query.get(product)
+                                      for product in form.products.data]
         db.session.commit()
         return redirect(url_for('add_process'))
     return render_template('add_process.html', form=form, table=table)
