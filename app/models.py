@@ -17,6 +17,7 @@ class Product(db.Model):
     name = db.Column("Name", db.String)
     processes = db.relationship("Process", secondary=product_processes, back_populates="products")
     orders = db.relationship("Order", secondary=orders_products, back_populates="products")
+    active = db.Column("active", db.Boolean, default=True)
 
 
 class Process(db.Model):
@@ -25,6 +26,7 @@ class Process(db.Model):
     responsible_employee = db.Column(db.Integer, db.ForeignKey('employee.id'))
     products = db.relationship("Product", secondary=product_processes, back_populates="processes")
     processes_in_order = db.relationship('ProcessInOrder', backref='Process', lazy='dynamic')
+    active = db.Column("active", db.Boolean, default=True)
 
 
 class Order(db.Model):
@@ -45,7 +47,7 @@ class Employee(db.Model, UserMixin):
     password = db.Column("Password", db.String)
     admin = db.Column("Administrator", db.Boolean, default=False)
     processes = db.relationship('Process', backref='employee', lazy='dynamic')
-
+    active = db.Column("active", db.Boolean, default=True)
 
 class ProcessInOrder(db.Model):
     processes_in_order_id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)

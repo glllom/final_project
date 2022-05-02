@@ -20,7 +20,6 @@ def complete_process(process_id):
     print(order)
     models.ProcessInOrder.query.get(process_id).completed = True
     if not list(models.ProcessInOrder.query.filter_by(completed=False, order=order.order_id)):
-        print("sdfsdf")
         order.completed = True
     db.session.commit()
     return redirect(url_for('dashboard'))
@@ -60,7 +59,7 @@ def add_user():
     if not current_user.admin:
         return redirect(url_for('login'))
     form = AddEmployee()
-    table = models.Employee.query.all()
+    table = models.Employee.query.filter(models.Employee.id > 1, models.Employee.active)
     return render_template('add_user.html', form=form, table=table)
 
 
@@ -85,7 +84,7 @@ def add_user_post():
 @process_app.route('/remove_user/<int:user_id>')
 @login_required
 def remove_user(user_id):
-    db.session.delete(models.Employee.query.get(user_id))
+    models.Employee.query.get(user_id).active = False
     db.session.commit()
     return redirect(url_for("add_user"))
 
@@ -96,10 +95,10 @@ def remove_user(user_id):
 def add_product():
     if not current_user.admin:
         return redirect(url_for('dashboard'))
-    table = models.Product.query.all()
+    table = models.Product.query.filter(models.Product.active)
     form = AddProduct()
     form.processes.choices = [
-        (process.process_id, process.name) for process in models.Process.query.all()
+        (process.process_id, process.name) for process in models.Process.query.filter(models.Process.active)
     ]
     if form.is_submitted():
         new_product = models.Product(name=form.name.data,
@@ -118,10 +117,10 @@ def add_product():
 def change_product(product_id):
     if not current_user.admin:
         return redirect(url_for('dashboard'))
-    table = models.Product.query.all()
+    table = models.Product.query.filter(models.Product.active)
     form = AddProduct()
     form.processes.choices = [
-        (process.process_id, process.name) for process in models.Process.query.all()
+        (process.process_id, process.name) for process in models.Process.query.filter(models.Process.active)
     ]
     if form.is_submitted():
         product_to_change = models.Product.query.get(product_id)
@@ -135,7 +134,7 @@ def change_product(product_id):
 @process_app.route('/remove_product/<int:product_id>')
 @login_required
 def remove_product(product_id):
-    db.session.delete(models.Product.query.get(product_id))
+    models.Product.query.get(product_id).active = False
     db.session.commit()
     return redirect(url_for("add_product"))
 
@@ -146,13 +145,13 @@ def remove_product(product_id):
 def add_process():
     if not current_user.admin:
         return redirect(url_for('dashboard'))
-    table = models.Process.query.all()
+    table = models.Process.query.filter(models.Process.active)
     form = AddProcess()
     form.employee.choices = [
-        (employee.id, f"{employee.first_name} {employee.last_name}") for employee in models.Employee.query.all()
+        (employee.id, f"{employee.first_name} {employee.last_name}") for employee in models.Employee.query.filter(models.Employee.id > 1, models.Employee.active)
     ]
     form.products.choices = [
-        (product.product_id, product.name) for product in models.Product.query.all()
+        (product.product_id, product.name) for product in models.Product.query.filter(models.Product.active)
     ]
     if form.is_submitted():
         new_process = models.Process(name=form.name.data,
@@ -172,13 +171,13 @@ def add_process():
 def change_process(process_id):
     if not current_user.admin:
         return redirect(url_for('dashboard'))
-    table = models.Process.query.all()
+    table = models.Process.query.filter(models.Process.active)
     form = AddProcess()
     form.employee.choices = [
-        (employee.id, f"{employee.first_name} {employee.last_name}") for employee in models.Employee.query.all()
+        (employee.id, f"{employee.first_name} {employee.last_name}") for employee in models.Employee.query.filter(models.Employee.id > 1, models.Employee.active)
     ]
     form.products.choices = [
-        (product.product_id, product.name) for product in models.Product.query.all()
+        (product.product_id, product.name) for product in models.Product.query.filter(models.Product.active)
     ]
     if form.is_submitted():
         process_to_change = models.Process.query.get(process_id)
@@ -194,7 +193,7 @@ def change_process(process_id):
 @process_app.route('/remove_process/<int:process_id>')
 @login_required
 def remove_process(process_id):
-    db.session.delete(models.Process.query.get(process_id))
+    models.Process.query.get(process_id).active = False
     db.session.commit()
     return redirect(url_for("add_process"))
 
@@ -206,7 +205,7 @@ def add_order():
     table = models.Order.query.filter_by(completed=False).order_by(models.Order.date_to_complete.asc())
     form = AddOrder()
     form.product.choices = [
-        (product.product_id, product.name) for product in models.Product.query.all()
+        (product.product_id, product.name) for product in models.Product.query.filter(models.Product.active)
     ]
     if form.is_submitted():
         order_id = form.order_id.data
@@ -244,7 +243,8 @@ def search_order():
     if not order:
         flash("Incorrect number.")
         return redirect(url_for("add_order"))
-    print(order)
-    order = []
-
-    return render_template('show_order.html', order=order)
+    processes_in_order = models.ProcessInOrder.query.filter_by(order=order.order_id)
+    employees = {
+        processes.processes_in_order_id: f"{models.Employee.query.get(processes.Process.responsible_employee).first_name} {models.Employee.query.get(processes.Process.responsible_employee).last_name}"
+        for processes in processes_in_order}
+    return render_template('show_order.html', order=order, processes_in_order=processes_in_order, employees=employees)
