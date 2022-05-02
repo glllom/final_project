@@ -17,8 +17,11 @@
         <tr>
             <td>{{ record.Order.order_id }}</td>
             <td>{{ record.Order.date_to_complete.strftime('%d/%m/%Y') }}</td>
-            {#<td class="form-control fw-italic">{{ record.comments }}</td>#}
-            <td><a href="{{ url_for('complete_process', process_id=record.processes_in_order_id) }}" class="btn btn-success p-1">Mark as Complete</a></td>
+            {#
+            <td class="form-control fw-italic">{{ record.comments }}</td>
+            #}
+            <td><a href="{{ url_for('complete_process', process_id=record.processes_in_order_id) }}"
+                   class="btn btn-success p-1">Mark as Complete</a></td>
         </tr>
         {% endfor %}
         </tbody>

@@ -148,7 +148,8 @@ def add_process():
     table = models.Process.query.filter(models.Process.active)
     form = AddProcess()
     form.employee.choices = [
-        (employee.id, f"{employee.first_name} {employee.last_name}") for employee in models.Employee.query.filter(models.Employee.id > 1, models.Employee.active)
+        (employee.id, f"{employee.first_name} {employee.last_name}") for employee in
+        models.Employee.query.filter(models.Employee.id > 1, models.Employee.active)
     ]
     form.products.choices = [
         (product.product_id, product.name) for product in models.Product.query.filter(models.Product.active)
@@ -174,7 +175,8 @@ def change_process(process_id):
     table = models.Process.query.filter(models.Process.active)
     form = AddProcess()
     form.employee.choices = [
-        (employee.id, f"{employee.first_name} {employee.last_name}") for employee in models.Employee.query.filter(models.Employee.id > 1, models.Employee.active)
+        (employee.id, f"{employee.first_name} {employee.last_name}") for employee in
+        models.Employee.query.filter(models.Employee.id > 1, models.Employee.active)
     ]
     form.products.choices = [
         (product.product_id, product.name) for product in models.Product.query.filter(models.Product.active)
@@ -245,6 +247,6 @@ def search_order():
         return redirect(url_for("add_order"))
     processes_in_order = models.ProcessInOrder.query.filter_by(order=order.order_id)
     employees = {
-        processes.processes_in_order_id: f"{models.Employee.query.get(processes.Process.responsible_employee).first_name} {models.Employee.query.get(processes.Process.responsible_employee).last_name}"
+        processes.processes_in_order_id: f"{models.Employee.query.get(processes.Process.responsible_employee).first_name} {models.Employee.query.get(processes.Process.responsible_employee).last_name} "
         for processes in processes_in_order}
     return render_template('show_order.html', order=order, processes_in_order=processes_in_order, employees=employees)

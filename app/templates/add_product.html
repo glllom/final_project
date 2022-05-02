@@ -66,22 +66,22 @@
 <div class="modal fade" id="form_div" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
      aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
-    <div class="modal-content container p-2">
+        <div class="modal-content container p-2">
 
-    <form action="/change_product" method="post" class="" id="change_form">
-        <h4>Change Product:</h4>
-        {{ form.csrf_token() }}
-        {{ form.name.label(class="form-label m-1") }}
-        {{ form.name(class="form-control m-1", id="change_form_name") }}
-        {{ form.processes.label(class="form-label m-1") }}
-        {{ form.processes(class="form-select m-1", size=4, multiple=True, id="change_form_processes") }}
-        <footer>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        {{ form.submit(class="btn btn-primary m-1", value="Save changes") }}
-        </footer>
+            <form action="/change_product" method="post" class="" id="change_form">
+                <h4>Change Product:</h4>
+                {{ form.csrf_token() }}
+                {{ form.name.label(class="form-label m-1") }}
+                {{ form.name(class="form-control m-1", id="change_form_name") }}
+                {{ form.processes.label(class="form-label m-1") }}
+                {{ form.processes(class="form-select m-1", size=4, multiple=True, id="change_form_processes") }}
+                <footer>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    {{ form.submit(class="btn btn-primary m-1", value="Save changes") }}
+                </footer>
 
-    </form>
+            </form>
         </div>
-        </div>
+    </div>
 </div>
 {% endblock %}

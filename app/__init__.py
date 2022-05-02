@@ -7,7 +7,6 @@ from flask_login import LoginManager
 process_app = Flask(__name__, template_folder="templates")
 process_app.config.from_object(Config)
 
-
 db = SQLAlchemy()
 db.init_app(process_app)
 migrate = Migrate(process_app, db)
@@ -25,4 +24,5 @@ def load_user(user_id):
 
 
 from app import models, routes
+
 db.create_all(app=process_app)

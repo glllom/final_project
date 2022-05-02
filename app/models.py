@@ -49,6 +49,7 @@ class Employee(db.Model, UserMixin):
     processes = db.relationship('Process', backref='employee', lazy='dynamic')
     active = db.Column("active", db.Boolean, default=True)
 
+
 class ProcessInOrder(db.Model):
     processes_in_order_id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     order = db.Column(db.Integer, db.ForeignKey('order.order_id'))

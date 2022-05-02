@@ -1,19 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-<form class="d-flex justify-content-end" action="{{ url_for('search_order') }}" method="post">
-                <div class="col">
-                    {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                    <h4 class="text-danger">{{ messages[0] }}</h4>
-                    {% endif %}
-                    {% endwith %}
-                </div>
-                <input class="form-control me-2 w-25" type="search" placeholder="Search" aria-label="Search Order"
-                       name="search_field">
-                <button class="btn btn-outline-success" type="submit">Search Order</button>
+    <form class="d-flex justify-content-end" action="{{ url_for('search_order') }}" method="post">
+        <div class="col">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <h4 class="text-danger">{{ messages[0] }}</h4>
+            {% endif %}
+            {% endwith %}
+        </div>
+        <input class="form-control me-2 w-25" type="search" placeholder="Search" aria-label="Search Order"
+               name="search_field">
+        <button class="btn btn-outline-success" type="submit">Search Order</button>
 
-            </form>
+    </form>
 
     <h2 class="text-primary">Order:<span class="ms-5 text-dark fw-normal">{{ order.order_id }}</span></h2>
     <h2 class="text-primary">Customer: <span class="ms-5 text-dark fw-normal">{{ order.customer }}</span></h2>
@@ -37,7 +37,9 @@
             <td>{{loop.index}}</td>
             <td>{{ pr.Process.name }}</td>
             <td>{{ employees[pr.processes_in_order_id]}}</td>
-            {% if pr.completed %}<td class="text-success fw-bold">Completed {% else %}<td class="text-danger fw-bold">Not completed {% endif %}</td>
+            {% if pr.completed %}
+            <td class="text-success fw-bold">Completed {% else %}
+            <td class="text-danger fw-bold">Not completed {% endif %}</td>
         </tr>
         {% endfor %}
     </table>
