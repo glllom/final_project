@@ -247,6 +247,6 @@ def search_order():
         return redirect(url_for("add_order"))
     processes_in_order = models.ProcessInOrder.query.filter_by(order=order.order_id)
     employees = {
-        processes.processes_in_order_id: f"{models.Employee.query.get(processes.Process.responsible_employee).first_name} {models.Employee.query.get(processes.Process.responsible_employee).last_name} "
+        processes.processes_in_order_id: f"{models.Employee.query.get(processes.Process.responsible_employee).first_name} {models.Employee.query.get(processes.Process.responsible_employee).last_name}"
         for processes in processes_in_order}
     return render_template('show_order.html', order=order, processes_in_order=processes_in_order, employees=employees)
