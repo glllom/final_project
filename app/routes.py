@@ -241,6 +241,10 @@ def remove_order(order_id):
 @process_app.route('/search_order', methods=['post'])
 @login_required
 def search_order():
+    """
+
+    :return:
+    """
     order = models.Order.query.get(request.form.get("search_field"))
     if not order:
         flash("Incorrect number.")
