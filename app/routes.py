@@ -233,6 +233,8 @@ def add_order():
 @process_app.route('/remove_order/<int:order_id>')
 @login_required
 def remove_order(order_id):
+    for process in models.ProcessInOrder.query.filter_by(order=order_id):
+        db.session.delete(process)
     db.session.delete(models.Order.query.get(order_id))
     db.session.commit()
     return redirect(url_for("add_order"))
@@ -242,7 +244,6 @@ def remove_order(order_id):
 @login_required
 def search_order():
     """
-
     :return:
     """
     order = models.Order.query.get(request.form.get("search_field"))
